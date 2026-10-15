@@ -42,5 +42,56 @@ const initial=[{id:'m1',name:'Амина',avatar:'А',color:'pink',preview:'Хо
       status.textContent = 'Не удалось связаться с Supabase';
     });
 </script>
+<script>
+  const status = document.createElement('div');
+  status.id = 'aligo-connection-status';
+  status.style.cssText =
+    'position:fixed;bottom:12px;left:12px;z-index:99999;' +
+    'background:#fff;color:#222;padding:10px 14px;' +
+    'border-radius:12px;font:14px Arial;box-shadow:0 2px 12px #0002';
+  status.textContent = 'Проверяем подключение...';
+  document.body.appendChild(status);
+
+  try {
+    const SUPABASE_URL = 'ВСТАВЬ_СВОЙ_PROJECT_URL';
+    const SUPABASE_PUBLISHABLE_KEY = 'ВСТАВЬ_СВОЙ_PUBLISHABLE_KEY';
+
+    if (
+      !SUPABASE_URL.startsWith('https://') ||
+      !SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')
+    ) {
+      throw new Error('Проверь URL и публичный ключ Supabase');
+    }
+
+    const aligoSupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    aligoSupabase
+      .from('profiles')
+      .select('*')
+      .limit(1)
+      .then(({ error }) => {
+        status.textContent = error
+          ? 'Подключение есть, но запрос profiles отклонён'
+          : 'Связь с Supabase работает';
+
+        if (error) {
+          console.error('AliGo Supabase:', error.message);
+        }
+      })
+      .catch((error) => {
+        status.textContent = 'Ошибка запроса Supabase';
+        console.error('AliGo Supabase:', error);
+      });
+  } catch (error) {
+    status.textContent = 'Ошибка настройки Supabase';
+    console.error('AliGo Supabase:', error);
+  }
+</script>
+</body>
+</html>
+
 </body>
 </body></html>
