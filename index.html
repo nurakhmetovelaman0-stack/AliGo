@@ -1,26 +1,309 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="aliGo — простой способ быть на связи">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>aliGo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><meta name="description" content="aliGo — простой способ быть на связи"><link rel="manifest" href="./manifest.webmanifest"><title>aliGo</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#172033;background:#f7f8fb;font-synthesis:none}*{box-sizing:border-box}body{margin:0}.app{max-width:520px;margin:auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;box-shadow:0 0 40px #1720330a}.top{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf0f5;position:sticky;top:0;background:#ffffffed;backdrop-filter:blur(12px);z-index:2}.brand{font-size:25px;font-weight:850;letter-spacing:-1.1px;color:#2673ed}.brand span{color:#172033}.iconbtn{border:0;background:#f1f5fb;border-radius:14px;width:42px;height:42px;font-size:19px}.tabs{display:flex;gap:8px;padding:14px 18px 8px}.tab{border:0;background:transparent;color:#778197;padding:10px 13px;border-radius:13px;font-size:14px;font-weight:650}.tab.active{background:#eaf2ff;color:#2169df}.search{margin:8px 18px 12px;background:#f4f6fa;border-radius:14px;padding:12px 14px;display:flex;gap:9px;align-items:center}.search input{border:0;outline:0;background:transparent;width:100%;font-size:15px}.section{padding:4px 20px 8px;color:#8b94a7;font-size:12px;font-weight:750;letter-spacing:.08em}.list{padding:0 10px 16px}.chat{width:100%;border:0;background:#fff;display:flex;align-items:center;gap:12px;padding:13px 10px;text-align:left;border-radius:16px;color:inherit}.chat:active{background:#f5f8ff}.avatar{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;font-size:20px;font-weight:750;flex-shrink:0;background:#eaf2ff;color:#3477e8}.avatar.green{background:#e4f8ef;color:#159767}.avatar.pink{background:#fff0f4;color:#d94e7b}.avatar.gold{background:#fff5df;color:#b47b15}.details{min-width:0;flex:1}.name{font-size:15px;font-weight:750}.preview{font-size:13px;color:#8a93a5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}.meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;color:#9aa3b3;font-size:11px}.dot{background:#2e7bf1;color:white;border-radius:20px;min-width:20px;padding:3px 6px;text-align:center;font-size:11px}.bottom{margin-top:auto;position:sticky;bottom:0;background:#fff;border-top:1px solid #edf0f5;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom))}.nav{border:0;background:transparent;color:#8b94a7;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;min-width:62px}.nav b{font-size:20px;font-weight:500}.nav.active{color:#2673ed}.screen{padding:20px;flex:1}.title{font-size:24px;font-weight:800;letter-spacing:-.6px;margin:2px 0 6px}.muted{color:#8a93a5;font-size:14px}.primary{border:0;background:#2673ed;color:white;font-weight:700;border-radius:14px;padding:13px 16px;font-size:15px}.outline{border:1px solid #e6eaf1;background:#fff;color:#27344c;border-radius:14px;padding:12px 14px;font-weight:650}.bubble{max-width:82%;padding:12px 14px;border-radius:17px;background:#f1f4f9;margin:10px 0;font-size:14px;line-height:1.4}.bubble.mine{margin-left:auto;background:#2673ed;color:#fff;border-bottom-right-radius:5px}.bubble.theirs{border-bottom-left-radius:5px}.composer{display:flex;gap:8px;padding:12px;border-top:1px solid #edf0f5}.composer input{min-width:0;flex:1;border:0;outline:0;background:#f4f6fa;border-radius:14px;padding:12px;font-size:14px}.empty{padding:35px 15px;text-align:center;color:#8a93a5}.hidden{display:none!important}.groupcard{padding:16px;border:1px solid #edf0f5;border-radius:18px;margin:12px 0;display:flex;gap:12px;align-items:center}.profile{width:76px;height:76px;border-radius:26px;background:#eaf2ff;color:#2673ed;display:grid;place-items:center;font-size:28px;font-weight:800;margin:20px 0 14px}
-</style></head>
-<body><div class="app"><header class="top"><div class="brand">ali<span>Go</span></div><button class="iconbtn" id="newChat" aria-label="Новое сообщение">＋</button></header>
-<div id="home"><div class="tabs"><button class="tab active" data-filter="all">Все</button><button class="tab" data-filter="unread">Непрочитанные</button><button class="tab" data-filter="groups">Группы</button></div><label class="search">⌕ <input id="search" placeholder="Поиск чатов" autocomplete="off"></label><div class="section">СООБЩЕНИЯ</div><div class="list" id="chatList"></div></div>
-<div id="chatScreen" class="hidden"><div class="top"><button class="iconbtn" id="back">‹</button><div style="flex:1;margin-left:12px"><div class="name" id="chatTitle">Чат</div><div class="preview">в сети недавно</div></div><button class="iconbtn" id="call">☎</button></div><div class="screen" id="messages" style="display:flex;flex-direction:column;flex:1;min-height:55vh"></div><form class="composer" id="sendForm"><input id="messageInput" placeholder="Написать сообщение…" maxlength="1000" required><button class="primary" type="submit">➤</button></form></div>
-<div id="groupsScreen" class="screen hidden"><div class="title">Группы</div><div class="muted">Общайтесь вместе — работа, друзья и интересы.</div><div class="groupcard"><div class="avatar">👥</div><div style="flex:1"><div class="name">Друзья aliGo</div><div class="preview">12 участников · общий чат</div></div><button class="outline" data-open="g1">Открыть</button></div><div class="groupcard"><div class="avatar green">✦</div><div style="flex:1"><div class="name">Идеи и проекты</div><div class="preview">8 участников · обсуждения</div></div><button class="outline" data-open="g2">Открыть</button></div><button class="primary" id="createGroup">＋ Создать группу</button></div>
-<div id="callsScreen" class="screen hidden"><div class="title">Звонки</div><div class="muted">Здесь появится история звонков.</div><div class="empty">☎️<p>Пока звонки не подключены</p><small>На следующем этапе добавим голосовые и видеозвонки через интернет.</small></div></div>
-<div id="profileScreen" class="screen hidden"><div class="title">Профиль</div><div class="profile">aG</div><div class="title" style="font-size:20px">Пользователь aliGo</div><div class="muted">Демонстрационный профиль</div><hr style="border:0;border-top:1px solid #edf0f5;margin:22px 0"><div class="name">О приложении</div><p class="muted">aliGo 0.1 · ранний прототип</p><p class="muted">Сообщения в этой версии хранятся только в этом браузере на устройстве. Это не онлайн-сервис.</p></div>
-<nav class="bottom"><button class="nav active" data-screen="home"><b>▤</b>Чаты</button><button class="nav" data-screen="groupsScreen"><b>♧</b>Группы</button><button class="nav" data-screen="callsScreen"><b>⌕</b>Звонки</button><button class="nav" data-screen="profileScreen"><b>◉</b>Профиль</button></nav></div>
-<script>
-const initial=[{id:'m1',name:'Амина',avatar:'А',color:'pink',preview:'Хорошо, договорились 😊',time:'12:42',unread:2,type:'person',messages:[['theirs','Привет! Как дела?'],['mine','Всё хорошо, спасибо 😊'],['theirs','Хорошо, договорились 😊']]},{id:'m2',name:'Друзья aliGo',avatar:'👥',color:'',preview:'Тимур: Всем привет!',time:'11:18',unread:3,type:'group',messages:[['theirs','Тимур: Всем привет!'],['mine','Рад видеть всех здесь 👋']]},{id:'m3',name:'Тимур',avatar:'Т',color:'green',preview:'Отправил тебе фото',time:'Вчера',unread:0,type:'person',messages:[['theirs','Отправил тебе фото'],['mine','Сейчас посмотрю!']]},{id:'m4',name:'Идеи и проекты',avatar:'✦',color:'gold',preview:'Новая идея для проекта',time:'Пн',unread:0,type:'group',messages:[['theirs','Новая идея для проекта']]},{id:'m5',name:'Мама',avatar:'М',color:'',preview:'Не забудь позвонить ❤️',time:'Вс',unread:0,type:'person',messages:[['theirs','Не забудь позвонить ❤️']]}];let chats;try{chats=JSON.parse(localStorage.getItem('aligo_chats'))||initial}catch(e){chats=initial}let active=null,filter='all';const $=id=>document.getElementById(id);function save(){try{localStorage.setItem('aligo_chats',JSON.stringify(chats))}catch(e){}}function render(){const q=$('search').value.toLowerCase();const list=chats.filter(c=>(filter==='all'||(filter==='unread'?c.unread>0:c.type==='group'))&&(c.name.toLowerCase().includes(q)||c.preview.toLowerCase().includes(q)));$('chatList').innerHTML=list.length?list.map(c=>`<button class="chat" data-chat="${c.id}"><div class="avatar ${c.color}">${c.avatar}</div><div class="details"><div class="name">${esc(c.name)}</div><div class="preview">${esc(c.preview)}</div></div><div class="meta"><span>${c.time}</span>${c.unread?`<span class="dot">${c.unread}</span>`:''}</div></button>`).join(''):'<div class="empty">Ничего не найдено</div>'}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function showScreen(id){['home','groupsScreen','callsScreen','profileScreen','chatScreen'].forEach(s=>$(s).classList.toggle('hidden',s!==id));document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.screen===id||(id==='chatScreen'&&b.dataset.screen==='home')))}function openChat(id){active=chats.find(c=>c.id===id);if(!active)return;active.unread=0;$('chatTitle').textContent=active.name;drawMessages();showScreen('chatScreen');save();render()}function drawMessages(){$('messages').innerHTML=active.messages.map(m=>`<div class="bubble ${m[0]==='mine'?'mine':'theirs'}">${esc(m[1])}</div>`).join('');$('messages').scrollTop=$('messages').scrollHeight}document.addEventListener('click',e=>{const c=e.target.closest('[data-chat]');if(c)openChat(c.dataset.chat);const nav=e.target.closest('[data-screen]');if(nav)showScreen(nav.dataset.screen);const tab=e.target.closest('[data-filter]');if(tab){filter=tab.dataset.filter;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===tab));render()}const op=e.target.closest('[data-open]');if(op){const c=chats.find(x=>x.id===op.dataset.open);if(c)openChat(c.id)}});$('search').addEventListener('input',render);$('back').onclick=()=>showScreen('home');$('sendForm').onsubmit=e=>{e.preventDefault();const v=$('messageInput').value.trim();if(!v||!active)return;active.messages.push(['mine',v]);active.preview=v;active.time='Сейчас';save();$('messageInput').value='';drawMessages();render()};$('newChat').onclick=()=>{const n=prompt('Имя нового чата:');if(!n||!n.trim())return;const id='u'+Date.now();chats.unshift({id,name:n.trim(),avatar:n.trim()[0].toUpperCase(),color:'',preview:'Новый чат',time:'Сейчас',unread:0,type:'person',messages:[['theirs','Чат создан на этом устройстве.'] ]});save();render();openChat(id)};$('call').onclick=()=>alert('Звонки появятся в следующих версиях aliGo.');$('createGroup').onclick=()=>{const n=prompt('Название группы:');if(!n||!n.trim())return;const id='g'+Date.now();chats.unshift({id,name:n.trim(),avatar:'👥',color:'',preview:'Группа создана',time:'Сейчас',unread:0,type:'group',messages:[['theirs','Группа создана локально.'] ]});save();render();openChat(id)};render();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#172033;background:#f7f8fb;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0}
+.app{max-width:520px;margin:auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;box-shadow:0 0 40px #1720330a}
+.top{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf0f5;position:sticky;top:0;background:#ffffffed;backdrop-filter:blur(12px);z-index:2}
+.brand{font-size:25px;font-weight:850;letter-spacing:-1.1px;color:#2673ed}
+.brand span{color:#172033}
+.iconbtn{border:0;background:#f1f5fb;border-radius:14px;width:42px;height:42px;font-size:19px}
+.tabs{display:flex;gap:8px;padding:14px 18px 8px}
+.tab{border:0;background:transparent;color:#778197;padding:10px 13px;border-radius:13px;font-size:14px;font-weight:650}
+.tab.active{background:#eaf2ff;color:#2169df}
+.search{margin:8px 18px 12px;background:#f4f6fa;border-radius:14px;padding:12px 14px;display:flex;gap:9px;align-items:center}
+.search input{border:0;outline:0;background:transparent;width:100%;font-size:15px}
+.section{padding:4px 20px 8px;color:#8b94a7;font-size:12px;font-weight:750;letter-spacing:.08em}
+.list{padding:0 10px 16px}
+.chat{width:100%;border:0;background:#fff;display:flex;align-items:center;gap:12px;padding:13px 10px;text-align:left;border-radius:16px;color:inherit}
+.chat:active{background:#f5f8ff}
+.avatar{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;font-size:20px;font-weight:750;flex-shrink:0;background:#eaf2ff;color:#3477e8}
+.avatar.green{background:#e4f8ef;color:#159767}
+.avatar.pink{background:#fff0f4;color:#d94e7b}
+.avatar.gold{background:#fff5df;color:#b47b15}
+.details{min-width:0;flex:1}
+.name{font-size:15px;font-weight:750}
+.preview{font-size:13px;color:#8a93a5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+.meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;color:#9aa3b3;font-size:11px}
+.dot{background:#2e7bf1;color:white;border-radius:20px;min-width:20px;padding:3px 6px;text-align:center;font-size:11px}
+.bottom{margin-top:auto;position:sticky;bottom:0;background:#fff;border-top:1px solid #edf0f5;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom))}
+.nav{border:0;background:transparent;color:#8b94a7;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;min-width:62px}
+.nav b{font-size:20px;font-weight:500}
+.nav.active{color:#2673ed}
+.screen{padding:20px;flex:1}
+.title{font-size:24px;font-weight:800;letter-spacing:-.6px;margin:2px 0 6px}
+.muted{color:#8a93a5;font-size:14px}
+.primary{border:0;background:#2673ed;color:white;font-weight:700;border-radius:14px;padding:13px 16px;font-size:15px}
+.outline{border:1px solid #e6eaf1;background:#fff;color:#27344c;border-radius:14px;padding:12px 14px;font-weight:650}
+.bubble{max-width:82%;padding:12px 14px;border-radius:17px;background:#f1f4f9;margin:10px 0;font-size:14px;line-height:1.4}
+.bubble.mine{margin-left:auto;background:#2673ed;color:#fff;border-bottom-right-radius:5px}
+.bubble.theirs{border-bottom-left-radius:5px}
+.composer{display:flex;gap:8px;padding:12px;border-top:1px solid #edf0f5}
+.composer input{min-width:0;flex:1;border:0;outline:0;background:#f4f6fa;border-radius:14px;padding:12px;font-size:14px}
+.empty{padding:35px 15px;text-align:center;color:#8a93a5}
+.hidden{display:none!important}
+.groupcard{padding:16px;border:1px solid #edf0f5;border-radius:18px;margin:12px 0;display:flex;gap:12px;align-items:center}
+.profile{width:76px;height:76px;border-radius:26px;background:#eaf2ff;color:#2673ed;display:grid;place-items:center;font-size:28px;font-weight:800;margin:20px 0 14px}
+#aligo-connection-status{position:fixed;bottom:12px;left:12px;right:12px;margin:auto;max-width:496px;z-index:99999;background:#fff;color:#222;padding:10px 14px;border-radius:12px;font:14px Arial,sans-serif;box-shadow:0 2px 12px #0002}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div class="brand">ali<span>Go</span></div>
+<button class="iconbtn" id="newChat" aria-label="Новое сообщение">＋</button>
+</header>
 
-  
-<script>
-  
+<div id="home">
+<div class="tabs">
+<button class="tab active" data-filter="all">Все</button>
+<button class="tab" data-filter="unread">Непрочитанные</button>
+<button class="tab" data-filter="groups">Группы</button>
+</div>
+<label class="search">⌕ <input id="search" placeholder="Поиск чатов" autocomplete="off"></label>
+<div class="section">СООБЩЕНИЯ</div>
+<div class="list" id="chatList"></div>
+</div>
 
- 
+<div id="chatScreen" class="hidden">
+<div class="top">
+<button class="iconbtn" id="back">‹</button>
+<div style="flex:1;margin-left:12px">
+<div class="name" id="chatTitle">Чат</div>
+<div class="preview">в сети недавно</div>
+</div>
+<button class="iconbtn" id="call">☎</button>
+</div>
+<div class="screen" id="messages" style="display:flex;flex-direction:column;flex:1;min-height:55vh"></div>
+<form class="composer" id="sendForm">
+<input id="messageInput" placeholder="Написать сообщение…" maxlength="1000" required>
+<button class="primary" type="submit">➤</button>
+</form>
+</div>
+
+<div id="groupsScreen" class="screen hidden">
+<div class="title">Группы</div>
+<div class="muted">Общайтесь вместе — работа, друзья и интересы.</div>
+<div class="groupcard">
+<div class="avatar">👥</div>
+<div style="flex:1"><div class="name">Друзья aliGo</div><div class="preview">12 участников · общий чат</div></div>
+<button class="outline" data-open="g1">Открыть</button>
+</div>
+<div class="groupcard">
+<div class="avatar green">✦</div>
+<div style="flex:1"><div class="name">Идеи и проекты</div><div class="preview">8 участников · обсуждения</div></div>
+<button class="outline" data-open="g2">Открыть</button>
+</div>
+<button class="primary" id="createGroup">＋ Создать группу</button>
+</div>
+
+<div id="callsScreen" class="screen hidden">
+<div class="title">Звонки</div>
+<div class="muted">Здесь появится история звонков.</div>
+<div class="empty">☎️<p>Пока звонки не подключены</p><small>На следующем этапе добавим голосовые и видеозвонки через интернет.</small></div>
+</div>
+
+<div id="profileScreen" class="screen hidden">
+<div class="title">Профиль</div>
+<div class="profile">aG</div>
+<div class="title" style="font-size:20px">Пользователь aliGo</div>
+<div class="muted">Демонстрационный профиль</div>
+<hr style="border:0;border-top:1px solid #edf0f5;margin:22px 0">
+<div class="name">О приложении</div>
+<p class="muted">aliGo 0.1 · ранний прототип</p>
+<p class="muted">Сообщения в этой версии хранятся в этом браузере. Подключение Supabase проверяется отдельно; облачная синхронизация сообщений ещё не настроена.</p>
+</div>
+
+<nav class="bottom">
+<button class="nav active" data-screen="home"><b>▤</b>Чаты</button>
+<button class="nav" data-screen="groupsScreen"><b>♧</b>Группы</button>
+<button class="nav" data-screen="callsScreen"><b>⌕</b>Звонки</button>
+<button class="nav" data-screen="profileScreen"><b>◉</b>Профиль</button>
+</nav>
+</div>
+
+<script>
+const initial=[
+{id:'m1',name:'Амина',avatar:'А',color:'pink',preview:'Хорошо, договорились 😊',time:'12:42',unread:2,type:'person',messages:[['theirs','Привет! Как дела?'],['mine','Всё хорошо, спасибо 😊'],['theirs','Хорошо, договорились 😊']]},
+{id:'m2',name:'Друзья aliGo',avatar:'👥',color:'',preview:'Тимур: Всем привет!',time:'11:18',unread:3,type:'group',messages:[['theirs','Тимур: Всем привет!'],['mine','Рад видеть всех здесь 👋']]},
+{id:'m3',name:'Тимур',avatar:'Т',color:'green',preview:'Отправил тебе фото',time:'Вчера',unread:0,type:'person',messages:[['theirs','Отправил тебе фото'],['mine','Сейчас посмотрю!']]},
+{id:'m4',name:'Идеи и проекты',avatar:'✦',color:'gold',preview:'Новая идея для проекта',time:'Пн',unread:0,type:'group',messages:[['theirs','Новая идея для проекта']]},
+{id:'m5',name:'Мама',avatar:'М',color:'',preview:'Не забудь позвонить ❤️',time:'Вс',unread:0,type:'person',messages:[['theirs','Не забудь позвонить ❤️']]}
+];
+
+let chats;
+try {
+  chats = JSON.parse(localStorage.getItem('aligo_chats')) || initial;
+} catch (e) {
+  chats = initial;
+}
+
+let active = null;
+let filter = 'all';
+const $ = id => document.getElementById(id);
+
+function save() {
+  try {
+    localStorage.setItem('aligo_chats', JSON.stringify(chats));
+  } catch (e) {
+    console.warn('Не удалось сохранить чаты локально', e);
+  }
+}
+
+function render() {
+  const q = $('search').value.toLowerCase();
+  const list = chats.filter(c =>
+    (filter === 'all' || (filter === 'unread' ? c.unread > 0 : c.type === 'group')) &&
+    (c.name.toLowerCase().includes(q) || c.preview.toLowerCase().includes(q))
+  );
+
+  $('chatList').innerHTML = list.length
+    ? list.map(c => `<button class="chat" data-chat="${esc(c.id)}">
+        <div class="avatar ${esc(c.color || '')}">${esc(c.avatar)}</div>
+        <div class="details">
+          <div class="name">${esc(c.name)}</div>
+          <div class="preview">${esc(c.preview)}</div>
+        </div>
+        <div class="meta"><span>${esc(c.time)}</span>${c.unread ? `<span class="dot">${c.unread}</span>` : ''}</div>
+      </button>`).join('')
+    : '<div class="empty">Ничего не найдено</div>';
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+
+function showScreen(id) {
+  ['home','groupsScreen','callsScreen','profileScreen','chatScreen'].forEach(s =>
+    $(s).classList.toggle('hidden', s !== id)
+  );
+  document.querySelectorAll('.nav').forEach(b =>
+    b.classList.toggle('active', b.dataset.screen === id || (id === 'chatScreen' && b.dataset.screen === 'home'))
+  );
+}
+
+function openChat(id) {
+  active = chats.find(c => c.id === id);
+  if (!active) return;
+  active.unread = 0;
+  $('chatTitle').textContent = active.name;
+  drawMessages();
+  showScreen('chatScreen');
+  save();
+  render();
+}
+
+function drawMessages() {
+  if (!active) return;
+  $('messages').innerHTML = active.messages.map(m =>
+    `<div class="bubble ${m[0] === 'mine' ? 'mine' : 'theirs'}">${esc(m[1])}</div>`
+  ).join('');
+  $('messages').scrollTop = $('messages').scrollHeight;
+}
+
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-chat]');
+  if (c) openChat(c.dataset.chat);
+
+  const nav = e.target.closest('[data-screen]');
+  if (nav) showScreen(nav.dataset.screen);
+
+  const tab = e.target.closest('[data-filter]');
+  if (tab) {
+    filter = tab.dataset.filter;
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === tab));
+    render();
+  }
+
+  const op = e.target.closest('[data-open]');
+  if (op) {
+    const group = chats.find(x => x.id === op.dataset.open);
+    if (group) openChat(group.id);
+    else alert('Эта демонстрационная группа пока не создана в списке чатов.');
+  }
+});
+
+$('search').addEventListener('input', render);
+$('back').onclick = () => showScreen('home');
+
+$('sendForm').onsubmit = e => {
+  e.preventDefault();
+  const v = $('messageInput').value.trim();
+  if (!v || !active) return;
+  active.messages.push(['mine', v]);
+  active.preview = v;
+  active.time = 'Сейчас';
+  save();
+  $('messageInput').value = '';
+  drawMessages();
+  render();
+};
+
+$('newChat').onclick = () => {
+  const n = prompt('Имя нового чата:');
+  if (!n || !n.trim()) return;
+  const id = 'u' + Date.now();
+  chats.unshift({
+    id, name:n.trim(), avatar:n.trim()[0].toUpperCase(), color:'',
+    preview:'Новый чат', time:'Сейчас', unread:0, type:'person',
+    messages:[['theirs','Чат создан на этом устройстве.']]
+  });
+  save();
+  render();
+  openChat(id);
+};
+
+$('call').onclick = () => alert('Звонки появятся в следующих версиях aliGo.');
+
+$('createGroup').onclick = () => {
+  const n = prompt('Название группы:');
+  if (!n || !n.trim()) return;
+  const id = 'g' + Date.now();
+  chats.unshift({
+    id, name:n.trim(), avatar:'👥', color:'',
+    preview:'Группа создана', time:'Сейчас', unread:0, type:'group',
+    messages:[['theirs','Группа создана локально.']]
+  });
+  save();
+  render();
+  openChat(id);
+};
+
+render();
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+
+<script>
+/* Настройки подключения Supabase */
+const SUPABASE_URL = 'https://yigbjjkpsmbgpgdditon.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_P0yC-0ppPNApcz1mBDxFRg_K-__mYfe';
+
+const status = document.createElement('div');
+status.id = 'aligo-connection-status';
+status.textContent = 'Проверяем подключение к Supabase...';
+document.body.appendChild(status);
+
+async function checkSupabaseConnection() {
+  try {
+    if (!window.supabase || !window.supabase.createClient) {
+      throw new Error('Библиотека Supabase не загрузилась');
+    }
+
     if (
       !SUPABASE_URL.startsWith('https://') ||
       !SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')
@@ -33,30 +316,25 @@ const initial=[{id:'m1',name:'Амина',avatar:'А',color:'pink',preview:'Хо
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    aligoSupabase
+    const { error } = await aligoSupabase
       .from('profiles')
       .select('*')
-      .limit(1)
-      .then(({ error }) => {
-        status.textContent = error
-          ? 'Подключение есть, но запрос profiles отклонён'
-          : 'Связь с Supabase работает';
+      .limit(1);
 
-        if (error) {
-          console.error('AliGo Supabase:', error.message);
-        }
-      })
-      .catch((error) => {
-        status.textContent = 'Ошибка запроса Supabase';
-        console.error('AliGo Supabase:', error);
-      });
+    if (error) {
+      status.textContent = 'Supabase доступен, но запрос profiles отклонён';
+      console.error('AliGo Supabase:', error.message);
+      return;
+    }
+
+    status.textContent = 'Связь с Supabase работает';
   } catch (error) {
-    status.textContent = 'Ошибка настройки Supabase';
+    status.textContent = 'Ошибка подключения Supabase — подробности в консоли';
     console.error('AliGo Supabase:', error);
   }
+}
+
+checkSupabaseConnection();
 </script>
 </body>
 </html>
-
-
-
