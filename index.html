@@ -8,333 +8,795 @@
 <meta name="description" content="aliGo — простой способ быть на связи">
 <link rel="manifest" href="./manifest.webmanifest">
 <title>aliGo</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#172033;background:#f7f8fb;font-synthesis:none}
-*{box-sizing:border-box}
-body{margin:0}
-.app{max-width:520px;margin:auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;box-shadow:0 0 40px #1720330a}
-.top{padding:20px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf0f5;position:sticky;top:0;background:#ffffffed;backdrop-filter:blur(12px);z-index:2}
-.brand{font-size:25px;font-weight:850;letter-spacing:-1.1px;color:#2673ed}
-.brand span{color:#172033}
-.iconbtn{border:0;background:#f1f5fb;border-radius:14px;width:42px;height:42px;font-size:19px}
-.tabs{display:flex;gap:8px;padding:14px 18px 8px}
-.tab{border:0;background:transparent;color:#778197;padding:10px 13px;border-radius:13px;font-size:14px;font-weight:650}
-.tab.active{background:#eaf2ff;color:#2169df}
-.search{margin:8px 18px 12px;background:#f4f6fa;border-radius:14px;padding:12px 14px;display:flex;gap:9px;align-items:center}
-.search input{border:0;outline:0;background:transparent;width:100%;font-size:15px}
-.section{padding:4px 20px 8px;color:#8b94a7;font-size:12px;font-weight:750;letter-spacing:.08em}
-.list{padding:0 10px 16px}
-.chat{width:100%;border:0;background:#fff;display:flex;align-items:center;gap:12px;padding:13px 10px;text-align:left;border-radius:16px;color:inherit}
-.chat:active{background:#f5f8ff}
-.avatar{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;font-size:20px;font-weight:750;flex-shrink:0;background:#eaf2ff;color:#3477e8}
-.avatar.green{background:#e4f8ef;color:#159767}
-.avatar.pink{background:#fff0f4;color:#d94e7b}
-.avatar.gold{background:#fff5df;color:#b47b15}
-.details{min-width:0;flex:1}
-.name{font-size:15px;font-weight:750}
-.preview{font-size:13px;color:#8a93a5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
-.meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;color:#9aa3b3;font-size:11px}
-.dot{background:#2e7bf1;color:white;border-radius:20px;min-width:20px;padding:3px 6px;text-align:center;font-size:11px}
-.bottom{margin-top:auto;position:sticky;bottom:0;background:#fff;border-top:1px solid #edf0f5;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom))}
-.nav{border:0;background:transparent;color:#8b94a7;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;min-width:62px}
-.nav b{font-size:20px;font-weight:500}
-.nav.active{color:#2673ed}
-.screen{padding:20px;flex:1}
-.title{font-size:24px;font-weight:800;letter-spacing:-.6px;margin:2px 0 6px}
-.muted{color:#8a93a5;font-size:14px}
-.primary{border:0;background:#2673ed;color:white;font-weight:700;border-radius:14px;padding:13px 16px;font-size:15px}
-.outline{border:1px solid #e6eaf1;background:#fff;color:#27344c;border-radius:14px;padding:12px 14px;font-weight:650}
-.bubble{max-width:82%;padding:12px 14px;border-radius:17px;background:#f1f4f9;margin:10px 0;font-size:14px;line-height:1.4}
-.bubble.mine{margin-left:auto;background:#2673ed;color:#fff;border-bottom-right-radius:5px}
-.bubble.theirs{border-bottom-left-radius:5px}
-.composer{display:flex;gap:8px;padding:12px;border-top:1px solid #edf0f5}
-.composer input{min-width:0;flex:1;border:0;outline:0;background:#f4f6fa;border-radius:14px;padding:12px;font-size:14px}
-.empty{padding:35px 15px;text-align:center;color:#8a93a5}
-.hidden{display:none!important}
-.groupcard{padding:16px;border:1px solid #edf0f5;border-radius:18px;margin:12px 0;display:flex;gap:12px;align-items:center}
-.profile{width:76px;height:76px;border-radius:26px;background:#eaf2ff;color:#2673ed;display:grid;place-items:center;font-size:28px;font-weight:800;margin:20px 0 14px}
-#aligo-connection-status{position:fixed;bottom:12px;left:12px;right:12px;margin:auto;max-width:496px;z-index:99999;background:#fff;color:#222;padding:10px 14px;border-radius:12px;font:14px Arial,sans-serif;box-shadow:0 2px 12px #0002}
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #172033;
+  background: #f7f8fb;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.app {
+  max-width: 520px;
+  margin: auto;
+  min-height: 100dvh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px #1720330a;
+}
+.top {
+  padding: 16px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf0f5;
+  position: sticky;
+  top: 0;
+  background: #ffffffed;
+  backdrop-filter: blur(12px);
+  z-index: 2;
+}
+.brand {
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -1.1px;
+  color: #2673ed;
+}
+.brand span { color: #172033; }
+.iconbtn {
+  border: 0;
+  background: #f1f5fb;
+  border-radius: 14px;
+  width: 42px;
+  height: 42px;
+  font-size: 21px;
+  color: #27344c;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px 8px;
+  overflow-x: auto;
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: #778197;
+  padding: 10px 13px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.tab.active { background: #eaf2ff; color: #2169df; }
+.search {
+  margin: 8px 18px 12px;
+  background: #f4f6fa;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: #778197;
+}
+.search input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
+  font-size: 15px;
+  color: #172033;
+}
+.section {
+  padding: 4px 20px 8px;
+  color: #8b94a7;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+.list { padding: 0 10px 16px; }
+.chat {
+  width: 100%;
+  border: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 10px;
+  text-align: left;
+  border-radius: 16px;
+  color: inherit;
+}
+.chat:active { background: #f5f8ff; }
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 750;
+  flex-shrink: 0;
+  background: #eaf2ff;
+  color: #3477e8;
+}
+.avatar.green { background: #e4f8ef; color: #159767; }
+.avatar.pink { background: #fff0f4; color: #d94e7b; }
+.avatar.gold { background: #fff5df; color: #b47b15; }
+.details { min-width: 0; flex: 1; }
+.name { font-size: 15px; font-weight: 750; }
+.preview {
+  font-size: 13px;
+  color: #8a93a5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+}
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  color: #9aa3b3;
+  font-size: 11px;
+}
+.dot {
+  background: #2e7bf1;
+  color: white;
+  border-radius: 20px;
+  min-width: 20px;
+  padding: 3px 6px;
+  text-align: center;
+  font-size: 11px;
+}
+.bottom {
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  border-top: 1px solid #edf0f5;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index: 3;
+}
+.nav {
+  border: 0;
+  background: transparent;
+  color: #8b94a7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  min-width: 62px;
+}
+.nav b { font-size: 20px; font-weight: 500; }
+.nav.active { color: #2673ed; }
+.screen { padding: 20px; flex: 1; }
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.6px;
+  margin: 2px 0 6px;
+}
+.muted { color: #8a93a5; font-size: 14px; line-height: 1.5; }
+.primary {
+  border: 0;
+  background: #2673ed;
+  color: white;
+  font-weight: 700;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-size: 15px;
+}
+.outline {
+  border: 1px solid #e6eaf1;
+  background: #fff;
+  color: #27344c;
+  border-radius: 14px;
+  padding: 11px 12px;
+  font-weight: 650;
+  flex-shrink: 0;
+}
+.bubble {
+  max-width: 85%;
+  overflow-wrap: anywhere;
+  padding: 12px 14px;
+  border-radius: 17px;
+  background: #f1f4f9;
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.bubble.mine {
+  margin-left: auto;
+  background: #2673ed;
+  color: #fff;
+  border-bottom-right-radius: 5px;
+}
+.bubble.theirs { border-bottom-left-radius: 5px; }
+.composer {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #edf0f5;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+.composer input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: #f4f6fa;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 14px;
+}
+.empty {
+  padding: 35px 15px;
+  text-align: center;
+  color: #8a93a5;
+  line-height: 1.5;
+}
+.hidden { display: none !important; }
+.groupcard {
+  padding: 14px;
+  border: 1px solid #edf0f5;
+  border-radius: 18px;
+  margin: 12px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.groupcard .details { flex: 1; }
+.profile {
+  width: 76px;
+  height: 76px;
+  border-radius: 26px;
+  background: #eaf2ff;
+  color: #2673ed;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 20px 0 14px;
+}
+#aligo-connection-status {
+  position: relative;
+  margin: 12px 16px;
+  padding: 12px;
+  border: 1px solid #e6eaf1;
+  border-radius: 14px;
+  background: #f8faff;
+  color: #27344c;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.status-ok { color: #128052 !important; }
+.status-error { color: #b42318 !important; }
+.status-wait { color: #8a6500 !important; }
+#home, #chatScreen { flex: 1; }
+#messages { overflow-y: auto; }
 </style>
 </head>
+
 <body>
 <div class="app">
-<header class="top">
-<div class="brand">ali<span>Go</span></div>
-<button class="iconbtn" id="newChat" aria-label="Новое сообщение">＋</button>
-</header>
 
-<div id="home">
-<div class="tabs">
-<button class="tab active" data-filter="all">Все</button>
-<button class="tab" data-filter="unread">Непрочитанные</button>
-<button class="tab" data-filter="groups">Группы</button>
-</div>
-<label class="search">⌕ <input id="search" placeholder="Поиск чатов" autocomplete="off"></label>
-<div class="section">СООБЩЕНИЯ</div>
-<div class="list" id="chatList"></div>
-</div>
+  <header class="top">
+    <div class="brand">ali<span>Go</span></div>
+    <button class="iconbtn" id="newChat" aria-label="Новое сообщение">＋</button>
+  </header>
 
-<div id="chatScreen" class="hidden">
-<div class="top">
-<button class="iconbtn" id="back">‹</button>
-<div style="flex:1;margin-left:12px">
-<div class="name" id="chatTitle">Чат</div>
-<div class="preview">в сети недавно</div>
-</div>
-<button class="iconbtn" id="call">☎</button>
-</div>
-<div class="screen" id="messages" style="display:flex;flex-direction:column;flex:1;min-height:55vh"></div>
-<form class="composer" id="sendForm">
-<input id="messageInput" placeholder="Написать сообщение…" maxlength="1000" required>
-<button class="primary" type="submit">➤</button>
-</form>
-</div>
+  <main id="home">
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Все</button>
+      <button class="tab" data-filter="unread">Непрочитанные</button>
+      <button class="tab" data-filter="groups">Группы</button>
+    </div>
 
-<div id="groupsScreen" class="screen hidden">
-<div class="title">Группы</div>
-<div class="muted">Общайтесь вместе — работа, друзья и интересы.</div>
-<div class="groupcard">
-<div class="avatar">👥</div>
-<div style="flex:1"><div class="name">Друзья aliGo</div><div class="preview">12 участников · общий чат</div></div>
-<button class="outline" data-open="m4">Открыть</button>
-</div>
-<div class="groupcard">
-<div class="avatar green">✦</div>
-<div style="flex:1"><div class="name">Идеи и проекты</div><div class="preview">8 участников · обсуждения</div></div>
-<button class="outline" data-open="g2">Открыть</button>
-</div>
-<button class="primary" id="createGroup">＋ Создать группу</button>
-</div>
+    <label class="search">
+      ⌕
+      <input id="search" placeholder="Поиск чатов" autocomplete="off">
+    </label>
 
-<div id="callsScreen" class="screen hidden">
-<div class="title">Звонки</div>
-<div class="muted">Здесь появится история звонков.</div>
-<div class="empty">☎️<p>Пока звонки не подключены</p><small>На следующем этапе добавим голосовые и видеозвонки через интернет.</small></div>
-</div>
+    <div class="section">СООБЩЕНИЯ</div>
+    <div class="list" id="chatList"></div>
+  </main>
 
-<div id="profileScreen" class="screen hidden">
-<div class="title">Профиль</div>
-<div class="profile">aG</div>
-<div class="title" style="font-size:20px">Пользователь aliGo</div>
-<div class="muted">Демонстрационный профиль</div>
-<hr style="border:0;border-top:1px solid #edf0f5;margin:22px 0">
-<div class="name">О приложении</div>
-<p class="muted">aliGo 0.1 · ранний прототип</p>
-<p class="muted">Сообщения в этой версии хранятся в этом браузере. Подключение Supabase проверяется отдельно; облачная синхронизация сообщений ещё не настроена.</p>
-</div>
+  <section id="chatScreen" class="hidden">
+    <div class="top">
+      <button class="iconbtn" id="back" aria-label="Назад">‹</button>
+      <div style="flex:1;margin-left:12px;min-width:0">
+        <div class="name" id="chatTitle">Чат</div>
+        <div class="preview">Демонстрационный чат</div>
+      </div>
+      <button class="iconbtn" id="call" aria-label="Позвонить">☎</button>
+    </div>
 
-<nav class="bottom">
-<button class="nav active" data-screen="home"><b>▤</b>Чаты</button>
-<button class="nav" data-screen="groupsScreen"><b>♧</b>Группы</button>
-<button class="nav" data-screen="callsScreen"><b>⌕</b>Звонки</button>
-<button class="nav" data-screen="profileScreen"><b>◉</b>Профиль</button>
-</nav>
+    <div class="screen" id="messages" style="display:flex;flex-direction:column;min-height:55vh"></div>
+
+    <form class="composer" id="sendForm">
+      <input id="messageInput" placeholder="Написать сообщение…" maxlength="1000" required>
+      <button class="primary" type="submit" aria-label="Отправить сообщение">➤</button>
+    </form>
+  </section>
+
+  <section id="groupsScreen" class="screen hidden">
+    <div class="title">Группы</div>
+    <div class="muted">Общайтесь вместе — работа, друзья и интересы.</div>
+
+    <div class="groupcard">
+      <div class="avatar">👥</div>
+      <div class="details">
+        <div class="name">Друзья aliGo</div>
+        <div class="preview">12 участников · общий чат</div>
+      </div>
+      <button class="outline" data-open="m2">Открыть</button>
+    </div>
+
+    <div class="groupcard">
+      <div class="avatar green">✦</div>
+      <div class="details">
+        <div class="name">Идеи и проекты</div>
+        <div class="preview">8 участников · обсуждения</div>
+      </div>
+      <button class="outline" data-open="m4">Открыть</button>
+    </div>
+
+    <button class="primary" id="createGroup">＋ Создать группу</button>
+  </section>
+
+  <section id="callsScreen" class="screen hidden">
+    <div class="title">Звонки</div>
+    <div class="muted">Здесь появится история звонков.</div>
+    <div class="empty">
+      ☎️
+      <p>Пока звонки не подключены</p>
+      <small>Голосовые и видеозвонки добавим на следующем этапе.</small>
+    </div>
+  </section>
+
+  <section id="profileScreen" class="screen hidden">
+    <div class="title">Профиль</div>
+    <div class="profile">aG</div>
+    <div class="title" style="font-size:20px">Пользователь aliGo</div>
+    <div class="muted">Демонстрационный профиль</div>
+    <hr style="border:0;border-top:1px solid #edf0f5;margin:22px 0">
+    <div class="name">О приложении</div>
+    <p class="muted">aliGo 0.1 · ранний прототип</p>
+    <p class="muted">Сейчас сообщения сохраняются в браузере на этом устройстве. Проверка Supabase не включает облачную синхронизацию сообщений.</p>
+  </section>
+
+  <div id="aligo-connection-status" class="status-wait" role="status" aria-live="polite">
+    Проверяем подключение к Supabase…
+  </div>
+
+  <nav class="bottom">
+    <button class="nav active" data-screen="home"><b>▤</b>Чаты</button>
+    <button class="nav" data-screen="groupsScreen"><b>♧</b>Группы</button>
+    <button class="nav" data-screen="callsScreen"><b>⌕</b>Звонки</button>
+    <button class="nav" data-screen="profileScreen"><b>◉</b>Профиль</button>
+  </nav>
+
 </div>
 
 <script>
-const initial=[
-{id:'m1',name:'Амина',avatar:'А',color:'pink',preview:'Хорошо, договорились 😊',time:'12:42',unread:2,type:'person',messages:[['theirs','Привет! Как дела?'],['mine','Всё хорошо, спасибо 😊'],['theirs','Хорошо, договорились 😊']]},
-{id:'m2',name:'Друзья aliGo',avatar:'👥',color:'',preview:'Тимур: Всем привет!',time:'11:18',unread:3,type:'group',messages:[['theirs','Тимур: Всем привет!'],['mine','Рад видеть всех здесь 👋']]},
-{id:'m3',name:'Тимур',avatar:'Т',color:'green',preview:'Отправил тебе фото',time:'Вчера',unread:0,type:'person',messages:[['theirs','Отправил тебе фото'],['mine','Сейчас посмотрю!']]},
-{id:'m4',name:'Идеи и проекты',avatar:'✦',color:'gold',preview:'Новая идея для проекта',time:'Пн',unread:0,type:'group',messages:[['theirs','Новая идея для проекта']]},
-{id:'m5',name:'Мама',avatar:'М',color:'',preview:'Не забудь позвонить ❤️',time:'Вс',unread:0,type:'person',messages:[['theirs','Не забудь позвонить ❤️']]}
+'use strict';
+
+const initialChats = [
+  {
+    id: 'm1',
+    name: 'Амина',
+    avatar: 'А',
+    color: 'pink',
+    preview: 'Хорошо, договорились 😊',
+    time: '12:42',
+    unread: 2,
+    type: 'person',
+    messages: [
+      ['theirs', 'Привет! Как дела?'],
+      ['mine', 'Всё хорошо, спасибо 😊'],
+      ['theirs', 'Хорошо, договорились 😊']
+    ]
+  },
+  {
+    id: 'm2',
+    name: 'Друзья aliGo',
+    avatar: '👥',
+    color: '',
+    preview: 'Тимур: Всем привет!',
+    time: '11:18',
+    unread: 3,
+    type: 'group',
+    messages: [
+      ['theirs', 'Тимур: Всем привет!'],
+      ['mine', 'Рад видеть всех здесь 👋']
+    ]
+  },
+  {
+    id: 'm3',
+    name: 'Тимур',
+    avatar: 'Т',
+    color: 'green',
+    preview: 'Отправил тебе фото',
+    time: 'Вчера',
+    unread: 0,
+    type: 'person',
+    messages: [
+      ['theirs', 'Отправил тебе фото'],
+      ['mine', 'Сейчас посмотрю!']
+    ]
+  },
+  {
+    id: 'm4',
+    name: 'Идеи и проекты',
+    avatar: '✦',
+    color: 'gold',
+    preview: 'Новая идея для проекта',
+    time: 'Пн',
+    unread: 0,
+    type: 'group',
+    messages: [
+      ['theirs', 'Новая идея для проекта']
+    ]
+  },
+  {
+    id: 'm5',
+    name: 'Мама',
+    avatar: 'М',
+    color: '',
+    preview: 'Не забудь позвонить ❤️',
+    time: 'Вс',
+    unread: 0,
+    type: 'person',
+    messages: [
+      ['theirs', 'Не забудь позвонить ❤️']
+    ]
+  }
 ];
 
-let chats;
-try {
-  chats = JSON.parse(localStorage.getItem('aligo_chats')) || initial;
-} catch (e) {
-  chats = initial;
-}
-
-let active = null;
-let filter = 'all';
 const $ = id => document.getElementById(id);
 
-function save() {
+function loadChats() {
   try {
-    localStorage.setItem('aligo_chats', JSON.stringify(chats));
-  } catch (e) {
-    console.warn('Не удалось сохранить чаты локально', e);
+    const stored = localStorage.getItem('aligo_chats');
+    if (!stored) return initialChats.map(c => ({
+      ...c,
+      messages: c.messages.map(m => [...m])
+    }));
+
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) throw new Error('Некорректный список чатов');
+
+    return parsed.filter(c =>
+      c &&
+      typeof c.id === 'string' &&
+      typeof c.name === 'string' &&
+      Array.isArray(c.messages)
+    );
+  } catch (error) {
+    console.warn('Не удалось загрузить локальные чаты:', error);
+    return initialChats.map(c => ({
+      ...c,
+      messages: c.messages.map(m => [...m])
+    }));
   }
 }
 
-function render() {
-  const q = $('search').value.toLowerCase();
-  const list = chats.filter(c =>
-    (filter === 'all' || (filter === 'unread' ? c.unread > 0 : c.type === 'group')) &&
-    (c.name.toLowerCase().includes(q) || c.preview.toLowerCase().includes(q))
-  );
+let chats = loadChats();
+let activeChatId = null;
+let filter = 'all';
 
-  $('chatList').innerHTML = list.length
-    ? list.map(c => `<button class="chat" data-chat="${esc(c.id)}">
-        <div class="avatar ${esc(c.color || '')}">${esc(c.avatar)}</div>
+function saveChats() {
+  try {
+    localStorage.setItem('aligo_chats', JSON.stringify(chats));
+  } catch (error) {
+    console.warn('Не удалось сохранить чаты:', error);
+    alert('Не удалось сохранить данные на устройстве. Проверь свободное место браузера.');
+  }
+}
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function renderChats() {
+  const query = $('search').value.trim().toLowerCase();
+
+  const visibleChats = chats.filter(chat => {
+    const matchesFilter =
+      filter === 'all' ||
+      (filter === 'unread' && Number(chat.unread) > 0) ||
+      (filter === 'groups' && chat.type === 'group');
+
+    const matchesSearch =
+      String(chat.name || '').toLowerCase().includes(query) ||
+      String(chat.preview || '').toLowerCase().includes(query);
+
+    return matchesFilter && matchesSearch;
+  });
+
+  $('chatList').innerHTML = visibleChats.length
+    ? visibleChats.map(chat => `
+      <button class="chat" data-chat="${esc(chat.id)}">
+        <div class="avatar ${esc(chat.color || '')}">${esc(chat.avatar || '?')}</div>
         <div class="details">
-          <div class="name">${esc(c.name)}</div>
-          <div class="preview">${esc(c.preview)}</div>
+          <div class="name">${esc(chat.name)}</div>
+          <div class="preview">${esc(chat.preview || '')}</div>
         </div>
-        <div class="meta"><span>${esc(c.time)}</span>${c.unread ? `<span class="dot">${c.unread}</span>` : ''}</div>
-      </button>`).join('')
+        <div class="meta">
+          <span>${esc(chat.time || '')}</span>
+          ${Number(chat.unread) > 0
+            ? `<span class="dot">${esc(chat.unread)}</span>`
+            : ''}
+        </div>
+      </button>
+    `).join('')
     : '<div class="empty">Ничего не найдено</div>';
 }
 
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[c]));
-}
+function showScreen(screenId) {
+  const screenIds = [
+    'home',
+    'chatScreen',
+    'groupsScreen',
+    'callsScreen',
+    'profileScreen'
+  ];
 
-function showScreen(id) {
-  ['home','groupsScreen','callsScreen','profileScreen','chatScreen'].forEach(s =>
-    $(s).classList.toggle('hidden', s !== id)
-  );
-  document.querySelectorAll('.nav').forEach(b =>
-    b.classList.toggle('active', b.dataset.screen === id || (id === 'chatScreen' && b.dataset.screen === 'home'))
-  );
-}
+  screenIds.forEach(id => {
+    $(id).classList.toggle('hidden', id !== screenId);
+  });
 
-function openChat(id) {
-  active = chats.find(c => c.id === id);
-  if (!active) return;
-  active.unread = 0;
-  $('chatTitle').textContent = active.name;
-  drawMessages();
-  showScreen('chatScreen');
-  save();
-  render();
+  document.querySelectorAll('.nav').forEach(button => {
+    const selectedScreen =
+      button.dataset.screen === screenId ||
+      (screenId === 'chatScreen' && button.dataset.screen === 'home');
+
+    button.classList.toggle('active', selectedScreen);
+  });
 }
 
 function drawMessages() {
-  if (!active) return;
-  $('messages').innerHTML = active.messages.map(m =>
-    `<div class="bubble ${m[0] === 'mine' ? 'mine' : 'theirs'}">${esc(m[1])}</div>`
-  ).join('');
+  const chat = chats.find(item => item.id === activeChatId);
+  if (!chat) return;
+
+  $('messages').innerHTML = chat.messages.map(message => {
+    const type = message[0] === 'mine' ? 'mine' : 'theirs';
+    return `<div class="bubble ${type}">${esc(message[1])}</div>`;
+  }).join('');
+
   $('messages').scrollTop = $('messages').scrollHeight;
 }
 
-document.addEventListener('click', e => {
-  const c = e.target.closest('[data-chat]');
-  if (c) openChat(c.dataset.chat);
+function openChat(id) {
+  const chat = chats.find(item => item.id === id);
 
-  const nav = e.target.closest('[data-screen]');
-  if (nav) showScreen(nav.dataset.screen);
-
-  const tab = e.target.closest('[data-filter]');
-  if (tab) {
-    filter = tab.dataset.filter;
-    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === tab));
-    render();
+  if (!chat) {
+    alert('Этот чат не найден.');
+    return;
   }
 
-  const op = e.target.closest('[data-open]');
-  if (op) {
-    const group = chats.find(x => x.id === op.dataset.open);
-    if (group) openChat(group.id);
-    else alert('Эта демонстрационная группа пока не создана в списке чатов.');
+  activeChatId = chat.id;
+  chat.unread = 0;
+
+  $('chatTitle').textContent = chat.name;
+  $('messageInput').value = '';
+
+  drawMessages();
+  showScreen('chatScreen');
+  saveChats();
+  renderChats();
+}
+
+document.addEventListener('click', event => {
+  const chatButton = event.target.closest('[data-chat]');
+  if (chatButton) {
+    openChat(chatButton.dataset.chat);
+    return;
+  }
+
+  const groupButton = event.target.closest('[data-open]');
+  if (groupButton) {
+    openChat(groupButton.dataset.open);
+    return;
+  }
+
+  const navButton = event.target.closest('[data-screen]');
+  if (navButton) {
+    showScreen(navButton.dataset.screen);
+    return;
+  }
+
+  const tabButton = event.target.closest('[data-filter]');
+  if (tabButton) {
+    filter = tabButton.dataset.filter;
+
+    document.querySelectorAll('.tab').forEach(button => {
+      button.classList.toggle('active', button === tabButton);
+    });
+
+    renderChats();
   }
 });
 
-$('search').addEventListener('input', render);
-$('back').onclick = () => showScreen('home');
+$('search').addEventListener('input', renderChats);
 
-$('sendForm').onsubmit = e => {
-  e.preventDefault();
-  const v = $('messageInput').value.trim();
-  if (!v || !active) return;
-  active.messages.push(['mine', v]);
-  active.preview = v;
-  active.time = 'Сейчас';
-  save();
+$('back').addEventListener('click', () => {
+  showScreen('home');
+});
+
+$('sendForm').addEventListener('submit', event => {
+  event.preventDefault();
+
+  const messageText = $('messageInput').value.trim();
+  const chat = chats.find(item => item.id === activeChatId);
+
+  if (!messageText || !chat) return;
+
+  chat.messages.push(['mine', messageText]);
+  chat.preview = messageText;
+  chat.time = 'Сейчас';
+
+  saveChats();
   $('messageInput').value = '';
+
   drawMessages();
-  render();
-};
+  renderChats();
+});
 
-$('newChat').onclick = () => {
-  const n = prompt('Имя нового чата:');
-  if (!n || !n.trim()) return;
+$('newChat').addEventListener('click', () => {
+  const nameInput = prompt('Имя нового чата:');
+  if (!nameInput || !nameInput.trim()) return;
+
+  const name = nameInput.trim();
   const id = 'u' + Date.now();
+
   chats.unshift({
-    id, name:n.trim(), avatar:n.trim()[0].toUpperCase(), color:'',
-    preview:'Новый чат', time:'Сейчас', unread:0, type:'person',
-    messages:[['theirs','Чат создан на этом устройстве.']]
+    id,
+    name,
+    avatar: name.charAt(0).toUpperCase(),
+    color: '',
+    preview: 'Новый чат',
+    time: 'Сейчас',
+    unread: 0,
+    type: 'person',
+    messages: [
+      ['theirs', 'Чат создан на этом устройстве.']
+    ]
   });
-  save();
-  render();
+
+  saveChats();
+  renderChats();
   openChat(id);
-};
+});
 
-$('call').onclick = () => alert('Звонки появятся в следующих версиях aliGo.');
+$('call').addEventListener('click', () => {
+  alert('Звонки пока не подключены. Эта функция появится в следующих версиях aliGo.');
+});
 
-$('createGroup').onclick = () => {
-  const n = prompt('Название группы:');
-  if (!n || !n.trim()) return;
+$('createGroup').addEventListener('click', () => {
+  const groupNameInput = prompt('Название группы:');
+  if (!groupNameInput || !groupNameInput.trim()) return;
+
+  const name = groupNameInput.trim();
   const id = 'g' + Date.now();
-  chats.unshift({
-    id, name:n.trim(), avatar:'👥', color:'',
-    preview:'Группа создана', time:'Сейчас', unread:0, type:'group',
-    messages:[['theirs','Группа создана локально.']]
-  });
-  save();
-  render();
-  openChat(id);
-};
 
-render();
+  chats.unshift({
+    id,
+    name,
+    avatar: '👥',
+    color: '',
+    preview: 'Группа создана',
+    time: 'Сейчас',
+    unread: 0,
+    type: 'group',
+    messages: [
+      ['theirs', 'Группа создана локально на этом устройстве.']
+    ]
+  });
+
+  saveChats();
+  renderChats();
+  openChat(id);
+});
+
+renderChats();
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
+  navigator.serviceWorker.register('./sw.js').catch(error => {
+    console.warn('Service Worker не зарегистрирован:', error);
+  });
 }
 </script>
 
 <script>
-/* Настройки подключения Supabase */
+/* Настройки подключения Supabase.
+   В браузере используется только публичный publishable key.
+   Секретные ключи сюда добавлять нельзя.
+*/
 const SUPABASE_URL = 'https://yigbjjkpsmbgpgdditon.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_P0yC-0ppPNApcz1mBDxFRg_K-__mYfe';
 
-const status = document.createElement('div');
-status.id = 'aligo-connection-status';
-status.textContent = 'Проверяем подключение к Supabase...';
-document.body.appendChild(status);
+const connectionStatus = $('aligo-connection-status');
+
+function setConnectionStatus(message, className) {
+  connectionStatus.textContent = message;
+  connectionStatus.className = className;
+}
 
 async function checkSupabaseConnection() {
+  setConnectionStatus('Проверяем подключение к Supabase…', 'status-wait');
+
   try {
-    if (!window.supabase || !window.supabase.createClient) {
-      throw new Error('Библиотека Supabase не загрузилась');
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+      throw new Error('Не загрузилась библиотека Supabase. Проверь интернет-соединение.');
     }
 
     if (
       !SUPABASE_URL.startsWith('https://') ||
       !SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')
     ) {
-      throw new Error('Проверь URL и публичный ключ Supabase');
+      throw new Error('Проверь URL проекта и публичный ключ Supabase.');
     }
 
-    const aligoSupabase = window.supabase.createClient(
+    const supabaseClient = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    const { error } = await aligoSupabase
+    const { error } = await supabaseClient
       .from('profiles')
       .select('*')
       .limit(1);
 
     if (error) {
-      status.textContent = 'Supabase доступен, но запрос profiles отклонён';
-      console.error('AliGo Supabase:', error.message);
+      console.error('AliGo Supabase:', error);
+
+      setConnectionStatus(
+        'Supabase: запрос profiles не выполнен. ' +
+        'Причина: ' + (error.message || 'неизвестная ошибка') +
+        '. Проверь таблицу profiles и правила доступа RLS.',
+        'status-error'
+      );
       return;
     }
 
-    status.textContent = 'Связь с Supabase работает';
+    setConnectionStatus(
+      'Соединение с Supabase работает. Проверка чтения profiles пройдена. ' +
+      'Сообщения пока сохраняются локально.',
+      'status-ok'
+    );
   } catch (error) {
-    status.textContent = 'Ошибка подключения Supabase — подробности в консоли';
     console.error('AliGo Supabase:', error);
+
+    setConnectionStatus(
+      'Ошибка подключения: ' + (error.message || 'неизвестная ошибка'),
+      'status-error'
+    );
   }
 }
 
 checkSupabaseConnection();
 </script>
+
 </body>
 </html>
